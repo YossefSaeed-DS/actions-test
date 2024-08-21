@@ -14,11 +14,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download sequence file
+      - name: Download sequence file (if available)
+        id: download-sequence
         uses: actions/download-artifact@v3
         with:
           name: sequence-artifact
           path: ./
+        continue-on-error: true  # Continue even if the artifact is not found
+
+      - name: Check if sequence file exists
+        run: |
+          if [ ! -f email_sequence.txt ]; then
+            echo "Sequence file not found. Initializing sequence number to 1."
+            echo "1" > email_sequence.txt
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v4
