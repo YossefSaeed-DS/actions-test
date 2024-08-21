@@ -15,7 +15,7 @@ def reset_sequence_number(sequence_file):
         f.write("1")
     print("Sequence number reset to 1.")
 
-# Step 1: Obtain the access token
+# Obtain the access token
 def get_access_token():
     url = "https://accounts.zoho.com/oauth/v2/token"
     payload = {
@@ -28,7 +28,7 @@ def get_access_token():
     access_token = response.json().get("access_token")
     return access_token
 
-# Step 2: Export data using the access token
+# Export data using the access token
 def export_data(access_token, report_type):
     url = f"https://analyticsapi.zoho.com/api/helmy%40bc-eg.com/Zoho%20Books%20Analytics_1/{report_type}"
     headers = {
@@ -44,7 +44,7 @@ def export_data(access_token, report_type):
     response = requests.get(url, headers=headers, params=params)
     return response.json()
 
-# Step 3: Process the JSON data into a DataFrame
+# Process the JSON data into a DataFrame
 def json_to_dataframe(data):
     try:
         # Extract column headers and rows
@@ -54,20 +54,19 @@ def json_to_dataframe(data):
         # Convert to DataFrame
         df = pd.DataFrame(rows, columns=columns)
 
-        # Debug: Print columns to check if 'Reporting Date' exists
+      
 
-
-        # Example of processing the DataFrame: convert 'Reporting Date' to datetime if it exists
+        #  processing the DataFrame: convert 'Reporting Date' to datetime if it exists
         if 'Reporting Date' in df.columns:
             df['Reporting Date'] = pd.to_datetime(df['Reporting Date'], format='%d %b, %Y %H:%M:%S')
 
-        # Additional data processing can be added here as needed
+        
         return df
     except KeyError as e:
         print(f"KeyError: {e} - Check if the column names in the JSON match the expected names.")
         return pd.DataFrame()  # Return an empty DataFrame on error
 
-# Step 4: Save data to Excel
+# Save data to Excel
 def save_to_excel(df, report_type):
     output = BytesIO()
     df.to_excel(output, index=False, sheet_name=report_type)
@@ -88,7 +87,7 @@ def get_next_sequence_number(sequence_file):
 
     return sequence_number
 
-# Step 5: Send email with multiple attachments
+# Send email with multiple attachments
 def send_email(file_streams, sequence_number):
     from_email = "yossefsaeed012108@gmail.com"
     to_email = "youssef.shehata@bc-eg.com"
